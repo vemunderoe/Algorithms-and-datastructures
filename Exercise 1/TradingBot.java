@@ -15,9 +15,9 @@ public class TradingBot {
     System.out.println();
     System.out.println("### Time Complexity O(n) ###");
     System.out.println("n-days - milliseconds");
-    testONWithNDays(100000);
     testONWithNDays(1000000);
     testONWithNDays(10000000);
+    testONWithNDays(100000000);
 
     System.out.println();
     System.out.println("### Time Complexity O(n^2) ###");
