@@ -9,16 +9,18 @@ import java.util.Random;
 public class Sorting {
   private static Random random = new Random();
   private static int[] unsortedNumbers = new int[1000000];
+  private static int threshold = 100;
 
   public static void main(String[] args) {
-    testQuicksort();
-    for (int i = 2; i < 150; i++) {
+    testQuicksort();    
+    for (int i = 2; i < threshold; i++) {
+      System.out.println();
       testQuickSortWithNThreshold(i);
-    }
+    }    
   }
 
   public static void testQuicksort() {
-    fillArrayWithRandomNumbers(unsortedNumbers, true);
+    fillArrayWithRandomNumbers(unsortedNumbers, false);
     int sumArrayBefore = sumOfArray(unsortedNumbers);        
 
     // Ta tiden
@@ -33,7 +35,7 @@ public class Sorting {
   }
   
   public static void testQuickSortWithNThreshold(int threshold) {
-    fillArrayWithRandomNumbers(unsortedNumbers, false);
+    fillArrayWithRandomNumbers(unsortedNumbers, true);
     int sumArrayBefore = sumOfArray(unsortedNumbers);        
 
     long startTime = System.currentTimeMillis();
@@ -41,8 +43,19 @@ public class Sorting {
     long endTime = System.currentTimeMillis();
 
     System.out.printf("Brukte %d ms med threshold på %d\n", endTime - startTime, threshold);
-    int sumArrayAfter = sumOfArray(unsortedNumbers);
-    System.out.println("Array sorted");
+    int sumArrayAfter = sumOfArray(unsortedNumbers);    
+    System.out.println("Test sorted correct: " + test(unsortedNumbers));
+    System.out.printf("Test before %d, test after %d\n", sumArrayBefore, sumArrayAfter);
+
+    // Test med sortert tabell
+    sumArrayBefore = sumOfArray(unsortedNumbers); 
+
+    long startTime2 = System.currentTimeMillis();
+    quicksortWithBubble(unsortedNumbers, 0, unsortedNumbers.length - 1, threshold);    
+    long endTime2 = System.currentTimeMillis();
+
+    System.out.printf("Brukte %d ms med threshold på %d på sortert tabell\n", endTime2 - startTime2, threshold);
+    sumArrayAfter = sumOfArray(unsortedNumbers);    
     System.out.println("Test sorted correct: " + test(unsortedNumbers));
     System.out.printf("Test before %d, test after %d\n", sumArrayBefore, sumArrayAfter);
   }
@@ -55,9 +68,13 @@ public class Sorting {
    * @param h (int) end index
    */
   public static void quicksort(int []t, int v, int h) {
-    int delepos = split(t, v, h);
-    quicksort(t, v, delepos - 1);
-    quicksort(t, delepos + 1, h);
+    if (h - v > 2) {
+      int delepos = split(t, v, h);
+      quicksort(t, v, delepos - 1);
+      quicksort(t, delepos + 1, h);
+    } else {
+      median3sort(t, v, h);
+    }
   }
 
   /**
