@@ -9,55 +9,56 @@ import java.util.Random;
 public class Sorting {
   private static Random random = new Random();
   private static int[] unsortedNumbers = new int[1000000];
-  private static int threshold = 100;
+  private static int threshold = 50;
 
   public static void main(String[] args) {
+    fillArrayWithRandomNumbers(unsortedNumbers, false);
     testQuicksort();    
-    for (int i = 2; i < threshold; i++) {
+    for (int i = 2; i <= threshold; i++) {
       System.out.println();
       testQuickSortWithNThreshold(i);
     }    
   }
 
   public static void testQuicksort() {
-    fillArrayWithRandomNumbers(unsortedNumbers, false);
-    int sumArrayBefore = sumOfArray(unsortedNumbers);        
+    int[] copiedArray = unsortedNumbers.clone();    
+    int sumArrayBefore = sumOfArray(copiedArray);   
 
     // Ta tiden
     long startTime = System.currentTimeMillis();
-    quicksort(unsortedNumbers, 0, unsortedNumbers.length - 1);    
+    quicksort(copiedArray, 0, copiedArray.length - 1);    
     long endTime = System.currentTimeMillis();
 
-    System.out.printf("Brukte %d ms med threshold på \n", endTime - startTime);
-    int sumArrayAfter = sumOfArray(unsortedNumbers);    
-    System.out.println("Test sorted correct: " + test(unsortedNumbers));
-    System.out.printf("Test before %d, test after %d\n", sumArrayBefore, sumArrayAfter);
+    System.out.printf("Brukte %d ms på vanlig quicksort \n", endTime - startTime);
+    int sumArrayAfter = sumOfArray(copiedArray);    
+    System.out.println("Test sortert riktig: " + test(copiedArray));
+    System.out.println("Samme tall før som etter: " + (sumArrayBefore - sumArrayAfter == 0));
   }
   
   public static void testQuickSortWithNThreshold(int threshold) {
-    fillArrayWithRandomNumbers(unsortedNumbers, true);
-    int sumArrayBefore = sumOfArray(unsortedNumbers);        
+    int[] copiedArray = unsortedNumbers.clone();
+    int sumArrayBefore = sumOfArray(copiedArray);        
 
     long startTime = System.currentTimeMillis();
-    quicksortWithBubble(unsortedNumbers, 0, unsortedNumbers.length - 1, threshold);    
+    quicksortWithBubble(copiedArray, 0, copiedArray.length - 1, threshold);    
     long endTime = System.currentTimeMillis();
 
     System.out.printf("Brukte %d ms med threshold på %d\n", endTime - startTime, threshold);
-    int sumArrayAfter = sumOfArray(unsortedNumbers);    
-    System.out.println("Test sorted correct: " + test(unsortedNumbers));
-    System.out.printf("Test before %d, test after %d\n", sumArrayBefore, sumArrayAfter);
+    int sumArrayAfter = sumOfArray(copiedArray);    
+    System.out.println("Test sortert riktig: " + test(copiedArray));
+    System.out.println("Samme tall før som etter: " + (sumArrayBefore - sumArrayAfter == 0));
 
     // Test med sortert tabell
-    sumArrayBefore = sumOfArray(unsortedNumbers); 
+    sumArrayBefore = sumOfArray(copiedArray); 
 
     long startTime2 = System.currentTimeMillis();
-    quicksortWithBubble(unsortedNumbers, 0, unsortedNumbers.length - 1, threshold);    
+    quicksortWithBubble(copiedArray, 0, copiedArray.length - 1, threshold);    
     long endTime2 = System.currentTimeMillis();
 
     System.out.printf("Brukte %d ms med threshold på %d på sortert tabell\n", endTime2 - startTime2, threshold);
-    sumArrayAfter = sumOfArray(unsortedNumbers);    
-    System.out.println("Test sorted correct: " + test(unsortedNumbers));
-    System.out.printf("Test before %d, test after %d\n", sumArrayBefore, sumArrayAfter);
+    sumArrayAfter = sumOfArray(copiedArray);    
+    System.out.println("Test sortert riktig: " + test(copiedArray));
+    System.out.println("Samme tall før som etter: " + (sumArrayBefore - sumArrayAfter == 0));
   }
 
   /**
