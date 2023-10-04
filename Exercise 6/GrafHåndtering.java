@@ -7,7 +7,6 @@ import java.util.List;
 
 public class GrafHåndtering {
     public static void main(String[] args) {
-        // Read file and create graph
         String filnavn = "ø6g2.txt";
 
         try (BufferedReader filLeser = new BufferedReader(new FileReader(filnavn))) {
@@ -48,7 +47,7 @@ class Graf {
     KøHåndterer køHåndterer;
 
     public Graf(int antallNoder) {
-        køHåndterer = new KøHåndterer(antallNoder);
+        køHåndterer = new KøHåndterer();
         naboListe = new Node[antallNoder];
         for (int i = 0; i < antallNoder; i++) {
             naboListe[i] = new Node(i);
@@ -118,7 +117,7 @@ class Node {
 
 class KøHåndterer {
     List<Node> kø;
-    public KøHåndterer(int antallNoder) {
+    public KøHåndterer() {
         kø = new ArrayList<>();
     }
 
