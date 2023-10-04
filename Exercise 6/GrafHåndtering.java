@@ -7,17 +7,21 @@ import java.util.List;
 
 public class GrafHåndtering {
     public static void main(String[] args) {
-        String filnavn = "ø6g2.txt";
+        String filnavn = "ø6g1.txt";
 
         try (BufferedReader filLeser = new BufferedReader(new FileReader(filnavn))) {
             String linje = filLeser.readLine();
-            Graf graf = new Graf(Integer.parseInt(linje.split(" ")[0]));
+            Graf grafBFS = new Graf(Integer.parseInt(linje.split(" ")[0]));
+            Graf grafTopologisk = new Graf(Integer.parseInt(linje.split("")[0]));
             while ((linje = filLeser.readLine()) != null) {
                 String[] deler = linje.trim().split("\\s+");
-                graf.lenkNode(Integer.parseInt(deler[0]), Integer.parseInt(deler[1]));
+                grafBFS.lenkNode(Integer.parseInt(deler[0]), Integer.parseInt(deler[1]));
+                grafTopologisk.lenkNode(Integer.parseInt(deler[0]), Integer.parseInt(deler[1]));
             }
-            graf.breddeSøk(5);
-            printBreddeFørstSøk(graf);
+            grafBFS.breddeSøk(5);
+            printBreddeFørstSøk(grafBFS);
+            Node node = grafTopologisk.topologiskSortering();
+            printTopologiskSortering(node);
         } catch (IOException ioException) {
             System.out.println(ioException.getMessage());
             ioException.printStackTrace();
@@ -39,6 +43,14 @@ public class GrafHåndtering {
                     + maxForgjengerBredde + "s    %-"
                     + maxDistanseBredde + "d%n", node.nodeNummer, forgjengerStr, node.distanse);
         }
+    }
+
+    public static void printTopologiskSortering(Node node) {
+        while (node != null) {
+            System.out.printf("%d ", node.nodeNummer);
+            node = node.forgjenger;
+        }
+        System.out.println();
     }
 }
 
@@ -80,6 +92,27 @@ class Graf {
         }
     }
 
+    public Node topologiskSortering() {
+        Node siste = null;
+        for (int i = naboListe.length; i-- > 0;) {
+            siste = dfs(naboListe[i], siste);
+        }
+
+        return siste;
+    }
+
+    public Node dfs(Node nåværendeNode, Node siste) {
+        if (nåværendeNode.besøkt) {
+            return siste;
+        }
+        nåværendeNode.besøkt = true;
+        for (Node neste : nåværendeNode.kanter) {
+            siste = dfs(neste, siste);
+        }
+        nåværendeNode.forgjenger = siste;
+        return nåværendeNode;
+    }
+
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         for (Node node : naboListe) {
@@ -95,6 +128,7 @@ class Node {
     int distanse;
     Node forgjenger;
     static int uendelig = 1000000000;
+    boolean besøkt = false;
 
     public Node(int nodeNummer) {
         this.kanter = new LinkedList<>();
