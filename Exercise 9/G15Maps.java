@@ -4,6 +4,8 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
 
@@ -31,8 +33,10 @@ public class G15Maps {
         g15Maps.lesInnKanterFraFil("nordenKartKanter.txt");
         g15Maps.lesInnInteressepunkterFraFil("interessepkt.txt");
 
-
-        //g15Maps.preprosesserForALT();
+        if (!Files.exists(Paths.get("noderTilLandemerker.preprosessert"))) {
+            System.out.println("Preprosesserer");
+            g15Maps.preprosesserForALT();
+        }
 
         g15Maps.lesInnPreprosesserteFilerForALT();
         //g15Maps.testPreprosesseringsData();
